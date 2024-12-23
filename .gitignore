@@ -1,0 +1,14 @@
+# prevent lawsuit
+baseq2/maps.lst
+baseq2/pak0.pak
+baseq2/pak1.pak
+baseq2/pak2.pak
+baseq2/save/
+
+# builds
+release/
+debug/
+
+.vs/
+
+*.obj
