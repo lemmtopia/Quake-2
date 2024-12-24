@@ -538,6 +538,26 @@ void Drop_Ammo (edict_t *ent, gitem_t *item)
 
 //======================================================================
 
+qboolean Pickup_Coffee(edict_t* ent, edict_t* other)
+{
+	// nothing for now...
+	Com_Printf("Coffee!!!");
+	return true;
+}
+
+qboolean Pickup_Vaccine(edict_t* ent, edict_t* other)
+{
+	// setup
+	ent->style |= HEALTH_IGNORE_MAX;
+	ent->count = 25;
+
+	other->health += ent->count;
+
+	return true;
+}
+
+//======================================================================
+
 void MegaHealth_think (edict_t *self)
 {
 	if (self->owner->health > self->owner->max_health)
@@ -2110,6 +2130,44 @@ tank commander's head
 		0,
 /* precache */ "items/s_health.wav items/n_health.wav items/l_health.wav items/m_health.wav"
 	},
+	{
+		"item_vaccine",
+		Pickup_Vaccine,
+		NULL,
+		NULL,
+		NULL,
+		"items/pkup.wav",
+		NULL, 0,
+		NULL,
+		"i_health",
+		"Vaccine",
+		3,
+		0,
+		NULL,
+		0,
+		0,
+		NULL,
+		"items/s_health.wav items/n_health.wav items/l_health.wav items/m_health.wav"
+	},
+	{
+		"item_coffee",	// class name
+		Pickup_Coffee,	// pickup proc
+		NULL,			//use proc
+		NULL,			// drop proc
+		NULL,			// think proc
+		"items/pkup.wav", // Sound
+		NULL, 0,		// model stuff
+		NULL,			// View proc
+		"i_health",		// icon
+		"Coffee",		// name
+		3,				// width
+		0,
+		NULL,
+		0,
+		0,				// weapon stuff
+		NULL,			// info (?)
+		"items/s_health.wav items/n_health.wav items/l_health.wav items/m_health.wav"
+	},
 
 	// end of list marker
 	{NULL}
@@ -2182,6 +2240,19 @@ void SP_item_health_mega (edict_t *self)
 	self->style = HEALTH_IGNORE_MAX|HEALTH_TIMED;
 }
 
+void SP_item_vaccine(edict_t* self)
+{
+	if (deathmatch->value && ((int)dmflags->value & DF_NO_HEALTH))
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	self->model = "models/items/mega_h/tris.md2";
+	self->count = 50;
+	SpawnItem(self, FindItem("Vaccine"));
+	gi.soundindex("items/m_health.wav");
+}
 
 void InitItems (void)
 {
